@@ -18,6 +18,10 @@
 
 }
 
+body {
+    background: rgb(0, 212, 255);
+    background: radial-gradient(circle, rgb(12, 195, 231) 0%, rgba(12, 195, 231) 35%, rgba(0, 0, 0, 1) 100%);
+}
 
 @layer components {
     .max-container {

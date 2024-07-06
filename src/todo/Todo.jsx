@@ -1,5 +1,6 @@
 import { list } from "postcss";
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 const Todo = () => {
   const [todo, setTodo] = useState({
@@ -12,44 +13,6 @@ const Todo = () => {
     id: "",
   });
 
-  // const handleChangeState = (commingId) => {
-  //   const changedState = {
-  //     isediting: true,
-  //     id: commingId,
-  //   };
-  //   setEditingItem(changedState);
-
-  //   const findItem = List.find((eachItem) => {
-  //     return eachItem.id === commingId;
-  //   });
-  //   setTodo({
-  //     ...todo,
-  //     id: findItem.id,
-  //     text: findItem.text,
-  //   });
-  // };
-
-  // const handleEdit = (e) => {
-  //   e.preventDefault();
-  //   const newTodo = List.map((eachItem) => {
-  //     if (eachItem.id === editingItem.id) {
-  //       return {
-  //         id: editingItem.id,
-  //         text: todo.text,
-  //       };
-  //     } else {
-  //       return eachItem;
-  //     }
-  //   });
-  //   setList(newTodo);
-  //   setEditingItem({
-  //     isediting: false,
-  //   });
-  //   setTodo({
-  //     ...todo,
-  //     text: "",
-  //   });
-  // };
   const changeState = (commingId) => {
     const changingState = {
       isediting: true,
@@ -98,19 +61,70 @@ const Todo = () => {
     setTodo({
       text: "",
     });
+
+    if (todo.text) {
+      let timerInterval;
+      Swal.fire({
+        position: "top-end",
+        title: "<p>Todo added successfully</p>",
+        html: "Thank You.",
+        timer: 500,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const timer = Swal.getPopup().querySelector("b");
+          timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        // if (result.dismiss === Swal.DismissReason.timer) {
+        //   // console.log("I was closed by the timer");
+        // }
+      });
+    }
   };
 
   const handleDelete = (commingId) => {
     const FilerTodo = List.filter((eachItem) => {
       return eachItem.id !== commingId;
     });
-    setList(FilerTodo);
+    let timerInterval;
+    Swal.fire({
+      position: "top-end",
+      title: "Deleting",
+      // html: "Thank You.",
+      timer: 1000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+          timer.textContent = `${Swal.getTimerLeft()}`;
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      },
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        // console.log("I was closed by the timer");
+      }
+    });
+    setTimeout(() => {
+      setList(FilerTodo);
+    }, 1000);
   };
 
   return (
-    <section className="padding mt-10 bg-slate-100 max-container ">
-      <div className="flex flex-col items-center border p-5 ">
-        <div className="w-1/2 max-sm:w-full max-md:w-full">
+    <section className="padding mt-10  max-container ">
+      <div className="flex flex-col items-center p-5 ">
+        <div className="w-1/2 max-sm:w-full max-md:w-full shadow-md">
           <form
             autoComplete="off"
             className="flex flex-row justify-center bg-white p-5 rounded-md w-full max-sm:flex-col gap-2"
@@ -154,14 +168,16 @@ const Todo = () => {
         <div className="w-1/2 max-sm:w-full max-md:w-full">
           <ul>
             {List.length === 0 && (
-              <h1 className="bg-white p-2 text-center">Not todos available</h1>
+              <h1 className="shadow-md bg-white p-2 text-center rounded-md">
+                Not todos available
+              </h1>
             )}
             {List.map((eachItem) => {
               const { id, text } = eachItem;
               return (
                 <li
                   key={id}
-                  className="flex select-none justify-between items-center border bg-white p-1 mt-2 rounded-md border-gray-200 "
+                  className="flex select-none justify-between items-center border bg-white p-1 mt-2 rounded-md border-gray-200 shadow-md "
                 >
                   <span className="ml-3 overflow-hidden">{text}</span>
                   <div className="flex ">
