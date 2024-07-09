@@ -1,6 +1,7 @@
 import React from "react";
 import Todo from "./todo/Todo";
 import Video from "./assets/background.mp4";
+import P from "./todo/P";
 const App = () => {
   return (
     <div>
@@ -18,7 +19,8 @@ const App = () => {
           Your browser does not support the video tag.
         </video>
       </header> */}
-      <Todo />  
+      <Todo />
+      <P />
     </div>
   );
 };

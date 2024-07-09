@@ -1,5 +1,5 @@
 import { list } from "postcss";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const Todo = () => {
@@ -12,6 +12,15 @@ const Todo = () => {
     isediting: false,
     id: "",
   });
+
+  const filterLocal = () => {
+    let localTodo = localStorage.getItem("Todo");
+    let getTodo = JSON.parse(localTodo);
+    let Rtodo = getTodo.map((eachItem) => {
+      console.log(eachItem);
+    });
+    return Rtodo;
+  };
 
   const changeState = (commingId) => {
     const changingState = {
@@ -40,7 +49,6 @@ const Todo = () => {
       } else {
         return eachItem;
       }
-      
     });
     setList(newTodo);
     setTodo({
@@ -58,17 +66,45 @@ const Todo = () => {
       id: new Date().getTime().toString(),
       text: todo.text.toUpperCase(),
     };
-    !todo.text ? alert("Please Enter todo") : setList([...List, newTodo]);
-    setTodo({
-      text: "",
-    });
+
+    if (!todo.text) {
+      let timerInterval;
+      Swal.fire({
+        position: "top-end",
+        icon: "warning",
+        title: "<p>Please enter todo</p>",
+        html: "",
+        timer: 700,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const timer = Swal.getPopup().querySelector("b");
+          timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        // if (result.dismiss === Swal.DismissReason.timer) {
+        //   // console.log("I was closed by the timer");
+        // }
+      });
+    } else {
+      setList([...List, newTodo]);
+      setTodo({
+        text: "",
+      });
+    }
 
     if (todo.text) {
       let timerInterval;
       Swal.fire({
         position: "top-end",
-        title: "<p>Todo added successfully</p>",
-        html: "Thank You.",
+        title: "<p>Todo added ✔️</p>",
+        html: "",
         timer: 500,
         timerProgressBar: true,
         didOpen: () => {
@@ -94,10 +130,11 @@ const Todo = () => {
     const FilerTodo = List.filter((eachItem) => {
       return eachItem.id !== commingId;
     });
+
     let timerInterval;
     Swal.fire({
       position: "top-end",
-      title: "Deleting",
+      title: "Deleting 🗑️",
       // html: "Thank You.",
       timer: 1000,
       timerProgressBar: true,
@@ -117,13 +154,19 @@ const Todo = () => {
         // console.log("I was closed by the timer");
       }
     });
+
     setTimeout(() => {
       setList(FilerTodo);
     }, 1000);
   };
 
+  useEffect(() => {
+    const temp = JSON.stringify(List);
+    localStorage.setItem("Todos", temp);
+  }, [List]);
+
   return (
-    <section className="padding mt-10  max-container ">
+    <section className="padding mt-10  max-container h-screen">
       <div className="flex flex-col items-center p-5 ">
         <div className="w-1/2 max-sm:w-full max-md:w-full shadow-md">
           <form
@@ -166,10 +209,10 @@ const Todo = () => {
           </form>
         </div>
         <br />
-        <div className="w-1/2 max-sm:w-full max-md:w-full">
-          <ul>
+        <div className="w-1/2 max-sm:w-full max-md:w-full ">
+          <ul className="overflow-y-auto">
             {List.length === 0 && (
-              <h1 className="shadow-md bg-white p-2 text-center rounded-md">
+              <h1 className="shadow-md bg-white p-2 text-center rounded-md ">
                 Not todos available
               </h1>
             )}
