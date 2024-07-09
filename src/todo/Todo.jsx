@@ -40,6 +40,7 @@ const Todo = () => {
       } else {
         return eachItem;
       }
+      
     });
     setList(newTodo);
     setTodo({
