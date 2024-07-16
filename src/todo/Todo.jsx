@@ -1,26 +1,33 @@
 import { list } from "postcss";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Tags from "./Tags";
+import TaskColumns from "./TaskColumns";
 
 const Todo = () => {
   const [todo, setTodo] = useState({
     id: "",
     text: "",
+    status: "",
+    tags: [],
   });
   const [List, setList] = useState([]);
+
   const [editingItem, setEditingItem] = useState({
     isediting: false,
     id: "",
   });
 
-  const filterLocal = () => {
-    let localTodo = localStorage.getItem("Todo");
-    let getTodo = JSON.parse(localTodo);
-    let Rtodo = getTodo.map((eachItem) => {
-      console.log(eachItem);
-    });
-    return Rtodo;
-  };
+  const [Status, setStatus] = useState("todo");
+
+  // const filterLocal = () => {
+  //   let localTodo = localStorage.getItem("Todo");
+  //   let getTodo = JSON.parse(localTodo);
+  //   let Rtodo = getTodo.map((eachItem) => {
+  //     console.log(eachItem);
+  //   });
+  //   return Rtodo;
+  // };
 
   const changeState = (commingId) => {
     const changingState = {
@@ -166,12 +173,12 @@ const Todo = () => {
   }, [List]);
 
   return (
-    <section className="padding mt-10  max-container h-screen">
-      <div className="flex flex-col items-center p-5 ">
-        <div className="w-1/2 max-sm:w-full max-md:w-full shadow-md">
+    <section>
+      <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container bg-white/30 mt-2 rounded-md  ">
+        <header className="shadow-md bg-white border rounded-md">
           <form
             autoComplete="off"
-            className="flex flex-row justify-center bg-white p-5 rounded-md w-full max-sm:flex-col gap-2"
+            className="flex flex-col justify-center px-2 py-2  rounded-md sticky top-0"
           >
             <input
               type="text"
@@ -180,7 +187,7 @@ const Todo = () => {
               value={todo.text}
               placeholder="Enter todo"
               className="bg-white-300 border
-          border-gray-200 p-2 rounded-md w-full basis-1/2 max-sm:basis-1/2 flex flex-wrap"
+          border-gray-200 p-2 rounded-md w-full basis-1/2 max-sm:basis-1/2 flex flex-wrap outline-none bg-gray-100 text-center"
               onChange={(e) =>
                 setTodo({
                   ...todo,
@@ -188,28 +195,54 @@ const Todo = () => {
                 })
               }
             />
-            {(editingItem.isediting === false && (
-              <button
-                onClick={(e) => handleSubmit(e)}
-                type="submit"
-                className="border border-gray-200 p-2 ml-2 bg-green-300 rounded-md basis-1/6  "
-              >
-                Add
-              </button>
-            )) ||
-              (editingItem.isediting === true && (
-                <button
-                  onClick={(e) => handleEdit(e)}
-                  type="submit"
-                  className="border border-gray-200 p-2 ml-2 bg-orange-300 rounded-md basis-1/6  "
+
+            <div className="flex flex-row flex-nowrap justify-between items-center py-2 mx-auto gap-8 max-sm:flex-wrap max-sm:justify-center">
+              <div className="flex justify-evenly gap-2">
+                <Tags Tagname={"Morning"} />
+                <Tags Tagname={"AfterNoon"} />
+                <Tags Tagname={"Night"} />
+              </div>
+              <div className="flex flex-nowrap">
+                <select
+                  name="task"
+                  id="task"
+                  className="border-2 rounded-md outline-none "
+                  onChange={(e) => {
+                    setStatus(e.target.value);
+                  }}
                 >
-                  Submit
-                </button>
-              ))}
+                  <option value="Todo">Todo</option>
+                  <option value="Doing">Doing</option>
+                  <option value="Completed">Completed</option>
+                </select>
+
+                <div>
+                  {(editingItem.isediting === false && (
+                    <button
+                      onClick={(e) => handleSubmit(e)}
+                      type="submit"
+                      className="border border-gray-200 p-2 ml-2 bg-indigo-500 text-white rounded-md basis-1/6  "
+                    >
+                      + Add Task
+                    </button>
+                  )) ||
+                    (editingItem.isediting === true && (
+                      <button
+                        onClick={(e) => handleEdit(e)}
+                        type="submit"
+                        className="border border-gray-200 p-2 ml-2 bg-orange-300 rounded-md basis-1/6  "
+                      >
+                        Submit
+                      </button>
+                    ))}
+                </div>
+              </div>
+            </div>
           </form>
-        </div>
+        </header>
         <br />
-        <div className="w-1/2 max-sm:w-full max-md:w-full ">
+        <hr />
+        <div className="max-sm:w-full max-md:w-full ">
           <ul className="overflow-y-auto">
             {List.length === 0 && (
               <h1 className="shadow-md bg-white p-2 text-center rounded-md ">
@@ -243,7 +276,15 @@ const Todo = () => {
             })}
           </ul>
         </div>
-      </div>
+      </section>
+      <hr />
+      <main className=" padding">
+        <section className="grid grid-cols-3 gap-8 text-start mx-auto w-dvh max-w-7xl lg:px-4 max-md:grid-cols-2 max-sm:grid-cols-1 ">
+          <TaskColumns ColumnName={"📝Todo"} />
+          <TaskColumns ColumnName={"👨‍💻Doing"} />
+          <TaskColumns ColumnName={"✅Done"} />
+        </section>
+      </main>
     </section>
   );
 };
