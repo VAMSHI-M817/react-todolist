@@ -75,60 +75,11 @@ const Todo = () => {
     };
 
     if (!todo.text) {
-      let timerInterval;
-      Swal.fire({
-        position: "top-end",
-        icon: "warning",
-        title: "<p>Please enter todo</p>",
-        html: "",
-        timer: 700,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      }).then((result) => {
-        /* Read more about handling dismissals below */
-        // if (result.dismiss === Swal.DismissReason.timer) {
-        //   // console.log("I was closed by the timer");
-        // }
-      });
+      alert("Please enter todo");
     } else {
       setList([...List, newTodo]);
       setTodo({
         text: "",
-      });
-    }
-
-    if (todo.text) {
-      let timerInterval;
-      Swal.fire({
-        position: "top-end",
-        title: "<p>Todo added ✔️</p>",
-        html: "",
-        timer: 500,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const timer = Swal.getPopup().querySelector("b");
-          timerInterval = setInterval(() => {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      }).then((result) => {
-        /* Read more about handling dismissals below */
-        // if (result.dismiss === Swal.DismissReason.timer) {
-        //   // console.log("I was closed by the timer");
-        // }
       });
     }
   };
@@ -142,7 +93,7 @@ const Todo = () => {
     Swal.fire({
       position: "top-end",
       title: "Deleting 🗑️",
-      // html: "Thank You.",
+      html: `${commingId} - Todo Deleted`,
       timer: 1000,
       timerProgressBar: true,
       didOpen: () => {
@@ -155,11 +106,6 @@ const Todo = () => {
       willClose: () => {
         clearInterval(timerInterval);
       },
-    }).then((result) => {
-      /* Read more about handling dismissals below */
-      if (result.dismiss === Swal.DismissReason.timer) {
-        // console.log("I was closed by the timer");
-      }
     });
 
     setTimeout(() => {
@@ -174,7 +120,8 @@ const Todo = () => {
 
   return (
     <section>
-      <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container bg-white/30 mt-2 rounded-md  ">
+      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl">Todo App</h1>
+      <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container mt-2 rounded-md  ">
         <header className="shadow-md bg-white border rounded-md">
           <form
             autoComplete="off"
