@@ -8,7 +8,7 @@ const Todo = () => {
   const [todo, setTodo] = useState({
     id: "",
     text: "",
-    status: "",
+    taskstatus: "Todo",
     tags: [],
   });
   const [List, setList] = useState([]);
@@ -18,16 +18,36 @@ const Todo = () => {
     id: "",
   });
 
-  const [Status, setStatus] = useState("todo");
 
-  // const filterLocal = () => {
-  //   let localTodo = localStorage.getItem("Todo");
-  //   let getTodo = JSON.parse(localTodo);
-  //   let Rtodo = getTodo.map((eachItem) => {
-  //     console.log(eachItem);
-  //   });
-  //   return Rtodo;
-  // };
+  const handleChange = (event) => {
+    event.preventDefault()
+    const { name, value } = event.target
+    setTodo(prev => {
+      return {
+        ...prev, [name]: value
+      }
+    })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newTodo = {
+      ...todo,
+      id: new Date().getTime().toString(),
+      text: todo.text.toUpperCase(),
+      taskstatus: todo.taskstatus
+    };
+
+    if (todo.text) {
+      setList([...List, newTodo]);
+      setTodo({
+        text: "",
+        taskstatus: "Todo"
+      });
+      console.log(newTodo)
+    }
+  };
+
 
   const changeState = (commingId) => {
     const changingState = {
@@ -45,6 +65,7 @@ const Todo = () => {
       text: findItem.text,
     });
   };
+
   const handleEdit = (e) => {
     e.preventDefault();
     const newTodo = List.map((eachItem) => {
@@ -64,24 +85,6 @@ const Todo = () => {
     setEditingItem({
       isediting: false,
     });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newTodo = {
-      ...todo,
-      id: new Date().getTime().toString(),
-      text: todo.text.toUpperCase(),
-    };
-
-    if (!todo.text) {
-      alert("Please enter todo");
-    } else {
-      setList([...List, newTodo]);
-      setTodo({
-        text: "",
-      });
-    }
   };
 
   const handleDelete = (commingId) => {
@@ -128,19 +131,15 @@ const Todo = () => {
             className="flex flex-col justify-center px-2 py-2  rounded-md sticky top-0"
           >
             <input
+              required
+              aria-required="true"
               type="text"
-              id="todo"
-              name="todo"
+              name="text"
               value={todo.text}
               placeholder="Enter todo"
               className="bg-white-300 border
           border-gray-200 p-2 rounded-md w-full basis-1/2 max-sm:basis-1/2 flex flex-wrap outline-none bg-gray-100 text-center"
-              onChange={(e) =>
-                setTodo({
-                  ...todo,
-                  text: e.target.value,
-                })
-              }
+              onChange={handleChange}
             />
 
             <div className="flex flex-row flex-nowrap justify-between items-center py-2 mx-auto gap-8 max-sm:flex-wrap max-sm:justify-center">
@@ -151,13 +150,13 @@ const Todo = () => {
               </div>
               <div className="flex flex-nowrap">
                 <select
-                  name="task"
+                  name="taskstatus"
+                  value={todo.taskstatus}
                   id="task"
                   className="border-2 rounded-md outline-none "
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                  }}
+                  onChange={handleChange}
                 >
+                  <option disabled>Select Status</option>
                   <option value="Todo">Todo</option>
                   <option value="Doing">Doing</option>
                   <option value="Completed">Completed</option>
