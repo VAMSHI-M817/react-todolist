@@ -5,6 +5,7 @@ import Tags from "./Tags";
 import TaskColumns from "./TaskColumns";
 
 const Todo = () => {
+  //HOOKS SECTION
   const [todo, setTodo] = useState({
     id: "",
     text: "",
@@ -18,37 +19,60 @@ const Todo = () => {
     id: "",
   });
 
-
+  //HANDLING THE FORM ELEMENTS INPUT DATA
   const handleChange = (event) => {
-    event.preventDefault()
-    const { name, value } = event.target
-    setTodo(prev => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    setTodo((prev) => {
       return {
-        ...prev, [name]: value
-      }
-    })
-  }
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
 
+  //HANDLING THE TAGS
+  const selectTag = (tag) => {
+    if (todo.tags.some((eachItem) => eachItem === tag)) {
+      const filterTags = todo.tags.filter((eachTag) => eachTag != tag);
+      setTodo((prev) => {
+        return {
+          ...prev,
+          tags: [filterTags],
+        };
+      });
+    } else {
+      setTodo((prev) => {
+        return {
+          ...prev,
+          tags: [...prev.tags, tag],
+        };
+      });
+    }
+  };
+
+  //HANDLING SUBMITTING OF DATA
   const handleSubmit = (e) => {
     e.preventDefault();
+    //CREATING A NEW TODO
     const newTodo = {
       ...todo,
       id: new Date().getTime().toString(),
       text: todo.text.toUpperCase(),
-      taskstatus: todo.taskstatus
+      taskstatus: todo.taskstatus,
     };
 
     if (todo.text) {
       setList([...List, newTodo]);
       setTodo({
         text: "",
-        taskstatus: "Todo"
+        taskstatus: "Todo",
       });
-      console.log(newTodo)
+      console.log(newTodo);
     }
   };
 
-
+  //HANDLING THE CHANGING THE STATE OF EDITING BUTTON
   const changeState = (commingId) => {
     const changingState = {
       isediting: true,
@@ -66,6 +90,7 @@ const Todo = () => {
     });
   };
 
+  //HANDLING DATA SUBMITTING AFTER DATA EDITED
   const handleEdit = (e) => {
     e.preventDefault();
     const newTodo = List.map((eachItem) => {
@@ -87,6 +112,7 @@ const Todo = () => {
     });
   };
 
+  //HANDLING THE DELETION OF TODO FROM LIST
   const handleDelete = (commingId) => {
     const FilerTodo = List.filter((eachItem) => {
       return eachItem.id !== commingId;
@@ -116,6 +142,7 @@ const Todo = () => {
     }, 1000);
   };
 
+  //STORING TODOS INTO LOCALSTORAGE
   useEffect(() => {
     const temp = JSON.stringify(List);
     localStorage.setItem("Todos", temp);
@@ -123,7 +150,9 @@ const Todo = () => {
 
   return (
     <section>
-      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl">Todo App</h1>
+      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl">
+        Todo App
+      </h1>
       <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container mt-2 rounded-md  ">
         <header className="shadow-md bg-white border rounded-md">
           <form
@@ -144,9 +173,9 @@ const Todo = () => {
 
             <div className="flex flex-row flex-nowrap justify-between items-center py-2 mx-auto gap-8 max-sm:flex-wrap max-sm:justify-center">
               <div className="flex justify-evenly gap-2">
-                <Tags Tagname={"Morning"} />
-                <Tags Tagname={"AfterNoon"} />
-                <Tags Tagname={"Night"} />
+                <Tags Tagname={"Morning"} selectTag={selectTag} />
+                <Tags Tagname={"AfterNoon"} selectTag={selectTag} />
+                <Tags Tagname={"Night"} selectTag={selectTag} />
               </div>
               <div className="flex flex-nowrap">
                 <select
