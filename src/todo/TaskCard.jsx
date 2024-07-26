@@ -3,22 +3,28 @@ import Tags from "./Tags";
 
 const TaskCard = () => {
   return (
-    <article className="flex flex-col items-start border w-full px-2 py-4 rounded-xl">
-      <p className="font-semibold ml-4">Eat fruit and do bath</p>
-      <div className="relative flex flex-nowrap items-center justify-between gap-4 px-4 py-4 max-sm:flex-wrap md:flex-nowrap">
-        <div className="flex flex-nowrap gap-2 max-sm:flex-wrap ">
-          <Tags Tagname={"Morning"} />
-          <Tags Tagname={"AfterNoon"} />
-          <Tags Tagname={"Night"} />
-        </div>
-        <div>
-          <button className="bg-red-500 px-2 rounded-md text-white">
-            Delete
-          </button>
+    <article className="flex flex-col items-start border w-full px-2 py-4 rounded-xl mx-auto shadow-md border-gray-300 ">
+      <div className=" rounded-md">
+        <p className="font-semibold ml-4">Eat fruit and do bath</p>
+        <div className="relative flex flex-nowrap items-center justify-between gap-4 px-4 py-4  ">
+          <div className="flex flex-wrap gap-2">
+            <div><Tags Tagname={"Morning"} /></div>
+            <div><Tags Tagname={"AfterNoon"} /></div>
+            <div><Tags Tagname={"Night"} /></div>
+          </div>
+          <hr className=" bg-gray-700" />
         </div>
       </div>
+      <div className="ml-4">
+        <button className=" hover:text-red-400 hover:border-red-500 hover:bg-white bg-red-500 border active:bg-red-100 rounded px-3 py-1 text-sm font-semibold text-white transition-all ease-in active:ease-out">
+          Delete
+        </button>
+        <button className=" hover:text-blue-400 hover:border-blue-500 hover:bg-white bg-blue-500 border active:bg-blue-100 rounded px-3 py-1 text-sm font-semibold text-white transition-all ease-in active:ease-out">
+          Edit
+        </button>
+      </div>
     </article>
-  );
+  ); s
 };
 
 export default TaskCard;

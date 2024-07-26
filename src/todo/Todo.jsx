@@ -1,4 +1,3 @@
-import { list } from "postcss";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Tags from "./Tags";
@@ -60,6 +59,7 @@ const Todo = () => {
       id: new Date().getTime().toString(),
       text: todo.text.toUpperCase(),
       taskstatus: todo.taskstatus,
+      tags: [todo.tags],
     };
 
     if (todo.text) {
@@ -67,8 +67,11 @@ const Todo = () => {
       setTodo({
         text: "",
         taskstatus: "Todo",
+        tags: []
       });
       console.log(newTodo);
+    } else {
+      alert("Please Enter task")
     }
   };
 
@@ -150,14 +153,14 @@ const Todo = () => {
 
   return (
     <section>
-      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl">
+      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl sticky z-40">
         Todo App
       </h1>
       <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container mt-2 rounded-md  ">
-        <header className="shadow-md bg-white border rounded-md">
+        <header className="shadow-md bg-white border rounded-md sticky top-4">
           <form
             autoComplete="off"
-            className="flex flex-col justify-center px-2 py-2  rounded-md sticky top-0"
+            className="flex flex-col justify-center px-2 py-2 rounded-md sticky top-0"
           >
             <input
               required
@@ -229,7 +232,7 @@ const Todo = () => {
               return (
                 <li
                   key={id}
-                  className="flex select-none justify-between items-center border bg-white p-1 mt-2 rounded-md border-gray-200 shadow-md "
+                  className="flex mx-auto select-none justify-between items-center border bg-white p-1 mt-2 rounded-md border-gray-200 shadow-md "
                 >
                   <span className="ml-3 overflow-hidden">{text}</span>
                   <div className="flex ">

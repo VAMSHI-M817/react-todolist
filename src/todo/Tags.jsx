@@ -1,13 +1,16 @@
 import React from "react";
 
-const Tags = ({ Tagname, selectTag }) => {
+const Tags = ({ Tagname, selectTag, checkTag }) => {
+
+
   return (
+
     <button
       type="button"
       onClick={() => {
         selectTag(Tagname);
       }}
-      className=" active:bg-green-400 bg-green-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-600"
+      className="bg-gray-200 active:bg-gray-300 text-gray-800 px-2 rounded inline-flex items-center transition-all ease-in active:ease-out"
     >
       {Tagname}
     </button>
