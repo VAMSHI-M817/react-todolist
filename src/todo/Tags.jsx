@@ -1,6 +1,6 @@
 import React from "react";
 
-const Tags = ({ Tagname, selectTag, checkTag }) => {
+const Tags = ({ Tagname, selectTag }) => {
 
 
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import Tags from "./Tags";
-import TaskColumns from "./TaskColumns";
+import icon from "../assets/Images/to-do-list.png"
+
 
 const Todo = () => {
   //HOOKS SECTION
@@ -11,13 +11,23 @@ const Todo = () => {
     taskstatus: "Todo",
     tags: [],
   });
-  const [List, setList] = useState([]);
+
+  //GETTING TODOS FROM LOCALSTORAGE
+  const getTemp = localStorage.getItem("Todos")
+
+  //LIST OF ALL TODOS
+  const [List, setList] = useState(JSON.parse(getTemp) || []);
 
   const [editingItem, setEditingItem] = useState({
     isediting: false,
     id: "",
   });
 
+  //HANDLING CLEARING ALL TODOS
+  const clearTodos = (e) => {
+    e.preventDefault()
+    setList([])
+  }
   //HANDLING THE FORM ELEMENTS INPUT DATA
   const handleChange = (event) => {
     event.preventDefault();
@@ -32,7 +42,8 @@ const Todo = () => {
 
   //HANDLING THE TAGS
   const selectTag = (tag) => {
-    if (todo.tags.some((eachItem) => eachItem === tag)) {
+    const res = todo.tags.some((eachItem) => eachItem === tag)
+    if (res) {
       const filterTags = todo.tags.filter((eachTag) => eachTag != tag);
       setTodo((prev) => {
         return {
@@ -48,6 +59,7 @@ const Todo = () => {
         };
       });
     }
+
   };
 
   //HANDLING SUBMITTING OF DATA
@@ -57,7 +69,7 @@ const Todo = () => {
     const newTodo = {
       ...todo,
       id: new Date().getTime().toString(),
-      text: todo.text.toUpperCase(),
+      text: todo.text,
       taskstatus: todo.taskstatus,
       tags: [todo.tags],
     };
@@ -69,7 +81,6 @@ const Todo = () => {
         taskstatus: "Todo",
         tags: []
       });
-      console.log(newTodo);
     } else {
       alert("Please Enter task")
     }
@@ -100,7 +111,7 @@ const Todo = () => {
       if (eachItem.id === editingItem.id) {
         return {
           id: editingItem.id,
-          text: todo.text.toUpperCase(),
+          text: todo.text,
         };
       } else {
         return eachItem;
@@ -125,14 +136,16 @@ const Todo = () => {
     Swal.fire({
       position: "top-end",
       title: "Deleting 🗑️",
-      html: `${commingId} - Todo Deleted`,
-      timer: 1000,
+      html: 'Todo will be deleted in <b></b> milliseconds.',
+      timer: 500,
       timerProgressBar: true,
       didOpen: () => {
         Swal.showLoading();
-        const timer = Swal.getPopup().querySelector("b");
+        const timer = Swal.getHtmlContainer().querySelector('b');
         timerInterval = setInterval(() => {
-          timer.textContent = `${Swal.getTimerLeft()}`;
+          if (timer) {
+            timer.textContent = Swal.getTimerLeft();
+          }
         }, 100);
       },
       willClose: () => {
@@ -152,15 +165,42 @@ const Todo = () => {
   }, [List]);
 
   return (
-    <section>
-      <h1 className="text-center font-bold -mb-10 bg-indigo-200 px-1 py-4 top-0 text-xl sticky z-40">
-        Todo App
-      </h1>
-      <section className="flex flex-col justify-center mx-auto max-w-3xl padding max-container mt-2 rounded-md  ">
-        <header className="shadow-md bg-white border rounded-md sticky top-4">
+    <section className="bg-slate-200 h-screen overflow-auto">
+      <header className=" sticky top-0">
+        <nav className="flex justify-between bg-white border border-gray-300 py-4 px-4 ">
+          <div className="flex flex-nowrap gap-2">
+            <img src={icon} alt="Icon Loading...." className="h-8 w-8" />
+            <p className="font-bold text-xl text-center max-sm:hidden text-gray-500 ">
+              <span className=" max-sm:hidden font-bold">Vamshi's</span>
+              <span className="text-indigo-500 mx-1 font-extrabold text-3xl max-sm:text-xl relative inline-block">
+                Todo
+                <svg className="absolute -bottom-0.5 w-full max-h-1.5" viewBox="0 0 55 5" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                  <path d="M0.652466 4.00002C15.8925 2.66668 48.0351 0.400018 54.6853 2.00002" stroke="currentColor" strokeWidth="2"></path>
+                </svg>
+              </span>
+              App
+            </p>
+          </div>
+          <div className="  place-self-center mr-8    ">
+            <ul className="flex flex-nowrap gap-4 text-gray-500">
+              <a href="">
+                <li>🏠Home</li>
+              </a>
+              <a href="">
+                <li>🧐About</li>
+              </a>
+              <a href="">
+                <li>💡Project</li>
+              </a>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <section className="flex flex-col justify-center mx-auto max-w-4xl max-h-4xl padding max-container rounded">
+        <section className=" shadow-md bg-white border rounded sticky top-16 px-8 -mt-12">
           <form
             autoComplete="off"
-            className="flex flex-col justify-center px-2 py-2 rounded-md sticky top-0"
+            className="flex flex-row  py-4 rounded"
           >
             <input
               required
@@ -169,61 +209,65 @@ const Todo = () => {
               name="text"
               value={todo.text}
               placeholder="Enter todo"
-              className="bg-white-300 border
-          border-gray-200 p-2 rounded-md w-full basis-1/2 max-sm:basis-1/2 flex flex-wrap outline-none bg-gray-100 text-center"
+              className=" flex flex-wrap bg-white-300 border
+           border-gray-200 p-2 rounded shadow-sm w-full flex-1 outline-none text-center bg-gray-100"
               onChange={handleChange}
             />
 
-            <div className="flex flex-row flex-nowrap justify-between items-center py-2 mx-auto gap-8 max-sm:flex-wrap max-sm:justify-center">
-              <div className="flex justify-evenly gap-2">
-                <Tags Tagname={"Morning"} selectTag={selectTag} />
-                <Tags Tagname={"AfterNoon"} selectTag={selectTag} />
-                <Tags Tagname={"Night"} selectTag={selectTag} />
-              </div>
-              <div className="flex flex-nowrap">
-                <select
-                  name="taskstatus"
-                  value={todo.taskstatus}
-                  id="task"
-                  className="border-2 rounded-md outline-none "
-                  onChange={handleChange}
+            <div className="flex-1">
+              {(editingItem.isediting === false && (
+                <button
+                  onClick={(e) => handleSubmit(e)}
+                  type="submit"
+                  className="border border-gray-200 px-4 py-2 ml-2 bg-indigo-500 text-white rounded  "
                 >
-                  <option disabled>Select Status</option>
-                  <option value="Todo">Todo</option>
-                  <option value="Doing">Doing</option>
-                  <option value="Completed">Completed</option>
-                </select>
+                  + <span className=" max-sm:hidden">Add Task</span>
+                </button>
+              )) ||
+                (editingItem.isediting === true && (
+                  <button
+                    onClick={(e) => handleEdit(e)}
+                    type="submit"
+                    className="border border-gray-200 p-2 ml-2 bg-orange-300 rounded   "
+                  >
+                    Submit
+                  </button>
+                ))}
+              <select
+                name="taskstatus"
+                value={todo.taskstatus}
+                id="task"
+                className="border-2 rounded-md outline-none py-2 ml-2"
+                onChange={handleChange}
+              >
+                <option disabled>Select Status</option>
+                <option value="Todo">Todo</option>
+                <option value="Doing">Doing</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div className="flex flex-nowrap">
 
-                <div>
-                  {(editingItem.isediting === false && (
-                    <button
-                      onClick={(e) => handleSubmit(e)}
-                      type="submit"
-                      className="border border-gray-200 p-2 ml-2 bg-indigo-500 text-white rounded-md basis-1/6  "
-                    >
-                      + Add Task
-                    </button>
-                  )) ||
-                    (editingItem.isediting === true && (
-                      <button
-                        onClick={(e) => handleEdit(e)}
-                        type="submit"
-                        className="border border-gray-200 p-2 ml-2 bg-orange-300 rounded-md basis-1/6  "
-                      >
-                        Submit
-                      </button>
-                    ))}
-                </div>
-              </div>
+
             </div>
           </form>
-        </header>
+        </section>
         <br />
         <hr />
-        <div className="max-sm:w-full max-md:w-full ">
+        <div className="max-sm:w-full max-md:w-full bg-white px-2 py-2 rounded ">
+          <div className="flex flex-row flex-nowrap justify-between items-center ">
+            <p className="bg-indigo-500 inline-block px-2 text-white rounded">Total : <span >{List.length}</span></p>
+            <button
+              onClick={clearTodos}
+              type="submit"
+              className="border border-gray-200 px-2 bg-red-500 text-white rounded  "
+            >
+              ✖ <span className=" max-sm:hidden"> Clear All</span>
+            </button>
+          </div>
           <ul className="overflow-y-auto">
             {List.length === 0 && (
-              <h1 className="shadow-md bg-white p-2 text-center rounded-md ">
+              <h1 className="shadow-md bg-white p-2 text-center text-gray-500 rounded ">
                 Not todos available
               </h1>
             )}
@@ -232,21 +276,21 @@ const Todo = () => {
               return (
                 <li
                   key={id}
-                  className="flex mx-auto select-none justify-between items-center border bg-white p-1 mt-2 rounded-md border-gray-200 shadow-md "
+                  className="flex mx-auto select-none justify-between items-center border capitalize bg-gray-100 px-4 py-1 mt-2 rounded border-gray-200 shadow-md "
                 >
                   <span className="ml-3 overflow-hidden">{text}</span>
                   <div className="flex ">
                     <button
                       onClick={() => changeState(id)}
-                      className=" border border-gray-200 p-2 ml-2 bg-green-300 rounded-md"
+                      className=" border border-white-200 bg-white p-2 ml-2 border-yellow-500  active:bg-gray-50 shadow-md rounded"
                     >
-                      Edit
+                      ✏️
                     </button>
                     <button
                       onClick={() => handleDelete(id)}
-                      className=" border border-gray-200 p-2 ml-2 bg-red-300 rounded-md "
+                      className=" border p-2 ml-2 border-red-400  active:bg-red-50 bg-white shadow-md rounded "
                     >
-                      Delete
+                      ❌
                     </button>
                   </div>
                 </li>
@@ -255,14 +299,13 @@ const Todo = () => {
           </ul>
         </div>
       </section>
-      <hr />
-      <main className=" padding">
+      {/* <main className=" padding">
         <section className="grid grid-cols-3 gap-8 text-start mx-auto w-dvh max-w-7xl lg:px-4 max-md:grid-cols-2 max-sm:grid-cols-1 ">
-          <TaskColumns ColumnName={"📝Todo"} />
-          <TaskColumns ColumnName={"👨‍💻Doing"} />
-          <TaskColumns ColumnName={"✅Done"} />
+          <TaskColumns ColumnName={"📝Todo"} status="Todo" tasks={List} />
+          <TaskColumns ColumnName={"👨‍💻Doing"} status="Doing" tasks={List} />
+          <TaskColumns ColumnName={"✅Done"} status="Done" tasks={List} />
         </section>
-      </main>
+      </main> */}
     </section>
   );
 };

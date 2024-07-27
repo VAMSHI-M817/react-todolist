@@ -1,16 +1,14 @@
 import React from "react";
 import Tags from "./Tags";
 
-const TaskCard = () => {
+const TaskCard = ({ title, tags }) => {
   return (
     <article className="flex flex-col items-start border w-full px-2 py-4 rounded-xl mx-auto shadow-md border-gray-300 ">
       <div className=" rounded-md">
-        <p className="font-semibold ml-4">Eat fruit and do bath</p>
+        <p className="font-semibold ml-4">{title}</p>
         <div className="relative flex flex-nowrap items-center justify-between gap-4 px-4 py-4  ">
           <div className="flex flex-wrap gap-2">
-            <div><Tags Tagname={"Morning"} /></div>
-            <div><Tags Tagname={"AfterNoon"} /></div>
-            <div><Tags Tagname={"Night"} /></div>
+            <div><Tags Tagname={tags} /></div>
           </div>
           <hr className=" bg-gray-700" />
         </div>
@@ -24,7 +22,7 @@ const TaskCard = () => {
         </button>
       </div>
     </article>
-  ); s
+  );
 };
 
 export default TaskCard;

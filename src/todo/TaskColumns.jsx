@@ -1,15 +1,20 @@
 import React from "react";
 import TaskCard from "./TaskCard";
 
-const TaskColumns = (columns) => {
-  const { ColumnName } = columns;
+const TaskColumns = ({ ColumnName, status, tasks }) => {
   return (
     <section>
-      <div>
+      <ul>
         <h1 className="font-bold text-xl">{ColumnName}</h1>
         <br />
-        <TaskCard />
-      </div>
+        {
+          tasks.map((task, index) => task.taskStatus === status &&
+            <li key={index}>
+              <TaskCard title={task.text} tags={task.tags} />
+            </li>
+          )
+        }
+      </ul>
     </section>
   );
 };
