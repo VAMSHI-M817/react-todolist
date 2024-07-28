@@ -27,6 +27,12 @@ const Todo = () => {
   const clearTodos = (e) => {
     e.preventDefault()
     setList([])
+    setTodo({
+      text: "",
+    });
+    setEditingItem({
+      isediting: false,
+    });
   }
   //HANDLING THE FORM ELEMENTS INPUT DATA
   const handleChange = (event) => {
@@ -136,7 +142,6 @@ const Todo = () => {
     Swal.fire({
       position: "top-end",
       title: "Deleting 🗑️",
-      html: 'Todo will be deleted in <b></b> milliseconds.',
       timer: 500,
       timerProgressBar: true,
       didOpen: () => {
@@ -156,6 +161,13 @@ const Todo = () => {
     setTimeout(() => {
       setList(FilerTodo);
     }, 1000);
+
+    setTodo({
+      text: "",
+    });
+    setEditingItem({
+      isediting: false,
+    });
   };
 
   //STORING TODOS INTO LOCALSTORAGE
@@ -180,16 +192,17 @@ const Todo = () => {
               </span>
               App
             </p>
+            
           </div>
           <div className="  place-self-center mr-8    ">
             <ul className="flex flex-nowrap gap-4 text-gray-500">
-              <a href="">
+              <a href="#">
                 <li>🏠Home</li>
               </a>
-              <a href="">
+              <a href="#">
                 <li>🧐About</li>
               </a>
-              <a href="">
+              <a href="#">
                 <li>💡Project</li>
               </a>
             </ul>
@@ -197,10 +210,10 @@ const Todo = () => {
         </nav>
       </header>
       <section className="flex flex-col justify-center mx-auto max-w-4xl max-h-4xl padding max-container rounded">
-        <section className=" shadow-md bg-white border rounded sticky top-16 px-8 -mt-12">
+        <section className=" shadow-md bg-white border rounded sticky top-16 px-8 -mt-12 max-sm:mt-4">
           <form
             autoComplete="off"
-            className="flex flex-row  py-4 rounded"
+            className="flex flex-row justify-center py-4 rounded "
           >
             <input
               required
@@ -208,55 +221,42 @@ const Todo = () => {
               type="text"
               name="text"
               value={todo.text}
-              placeholder="Enter todo"
-              className=" flex flex-wrap bg-white-300 border
-           border-gray-200 p-2 rounded shadow-sm w-full flex-1 outline-none text-center bg-gray-100"
+              placeholder="Enter Todo"
+              className="bg-white-300 border
+           border-gray-200 rounded shadow-sm w-full outline-none text-center bg-gray-100 "
               onChange={handleChange}
             />
 
-            <div className="flex-1">
+            <div>
               {(editingItem.isediting === false && (
                 <button
                   onClick={(e) => handleSubmit(e)}
                   type="submit"
-                  className="border border-gray-200 px-4 py-2 ml-2 bg-indigo-500 text-white rounded  "
+                  className="border border-gray-200 px-2 py-2 ml-2 bg-indigo-500 text-white rounded flex items-center whitespace-nowrap"
                 >
-                  + <span className=" max-sm:hidden">Add Task</span>
+                  
+                  <span>+ Add <span className="max-sm:hidden">Task</span></span>
                 </button>
+
               )) ||
                 (editingItem.isediting === true && (
                   <button
                     onClick={(e) => handleEdit(e)}
                     type="submit"
-                    className="border border-gray-200 p-2 ml-2 bg-orange-300 rounded   "
+                    className="border border-gray-200 py-2 px-2 ml-2 bg-orange-300 rounded   "
                   >
                     Submit
                   </button>
                 ))}
-              <select
-                name="taskstatus"
-                value={todo.taskstatus}
-                id="task"
-                className="border-2 rounded-md outline-none py-2 ml-2"
-                onChange={handleChange}
-              >
-                <option disabled>Select Status</option>
-                <option value="Todo">Todo</option>
-                <option value="Doing">Doing</option>
-                <option value="Completed">Completed</option>
-              </select>
             </div>
-            <div className="flex flex-nowrap">
 
-
-            </div>
           </form>
         </section>
         <br />
         <hr />
-        <div className="max-sm:w-full max-md:w-full bg-white px-2 py-2 rounded ">
-          <div className="flex flex-row flex-nowrap justify-between items-center ">
-            <p className="bg-indigo-500 inline-block px-2 text-white rounded">Total : <span >{List.length}</span></p>
+        <div className="max-sm:w-full max-md:w-full bg-white px-2 py-2 rounded">
+          <div className="flex flex-row flex-nowrap justify-between items-center bg-white mt-2 px-4 py-3">
+            <p className="bg-indigo-500 inline-block px-2 text-white rounded">Todos : <span >{List.length}</span></p>
             <button
               onClick={clearTodos}
               type="submit"
@@ -265,9 +265,9 @@ const Todo = () => {
               ✖ <span className=" max-sm:hidden"> Clear All</span>
             </button>
           </div>
-          <ul className="overflow-y-auto">
+          <ul className="overflow-y-auto px-4 py-4">
             {List.length === 0 && (
-              <h1 className="shadow-md bg-white p-2 text-center text-gray-500 rounded ">
+              <h1 className="shadow-md bg-white p-2 text-center text-gray-500 rounded border ">
                 Not todos available
               </h1>
             )}
@@ -276,7 +276,7 @@ const Todo = () => {
               return (
                 <li
                   key={id}
-                  className="flex mx-auto select-none justify-between items-center border capitalize bg-gray-100 px-4 py-1 mt-2 rounded border-gray-200 shadow-md "
+                  className="flex mx-auto select-none justify-between items-center text-gray-700 border capitalize bg-gray-100 px-4 py-1 mt-2 rounded border-gray-200 shadow-md "
                 >
                   <span className="ml-3 overflow-hidden">{text}</span>
                   <div className="flex ">
@@ -298,6 +298,8 @@ const Todo = () => {
             })}
           </ul>
         </div>
+
+
       </section>
       {/* <main className=" padding">
         <section className="grid grid-cols-3 gap-8 text-start mx-auto w-dvh max-w-7xl lg:px-4 max-md:grid-cols-2 max-sm:grid-cols-1 ">
