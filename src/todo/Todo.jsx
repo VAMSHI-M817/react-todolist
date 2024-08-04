@@ -10,6 +10,7 @@ const Todo = () => {
     text: "",
     taskstatus: "Todo",
     tags: [],
+    co3
   });
 
   //GETTING TODOS FROM LOCALSTORAGE
@@ -22,6 +23,11 @@ const Todo = () => {
     isediting: false,
     id: "",
   });
+
+  const [Toggle, setToggle] = useState({
+    status: false,
+    id: ""
+  })
 
   //HANDLING CLEARING ALL TODOS
   const clearTodos = (e) => {
@@ -170,6 +176,12 @@ const Todo = () => {
     });
   };
 
+  //HANDLING TOGGLE
+  const handleToggle = (commingId) => {
+
+
+  }
+
   //STORING TODOS INTO LOCALSTORAGE
   useEffect(() => {
     const temp = JSON.stringify(List);
@@ -192,7 +204,7 @@ const Todo = () => {
               </span>
               App
             </p>
-            
+
           </div>
           <div className="  place-self-center mr-8    ">
             <ul className="flex flex-nowrap gap-4 text-gray-500">
@@ -234,7 +246,7 @@ const Todo = () => {
                   type="submit"
                   className="border border-gray-200 px-2 py-2 ml-2 bg-indigo-500 text-white rounded flex items-center whitespace-nowrap"
                 >
-                  
+
                   <span>+ Add <span className="max-sm:hidden">Task</span></span>
                 </button>
 
@@ -278,8 +290,10 @@ const Todo = () => {
                   key={id}
                   className="flex mx-auto select-none justify-between items-center text-gray-700 border capitalize bg-gray-100 px-4 py-1 mt-2 rounded border-gray-200 shadow-md "
                 >
+                  <input type="checkbox" onChange={() => handleToggle} />
                   <span className="ml-3 overflow-hidden">{text}</span>
                   <div className="flex ">
+
                     <button
                       onClick={() => changeState(id)}
                       className=" border border-white-200 bg-white p-2 ml-2 border-yellow-500  active:bg-gray-50 shadow-md rounded"
