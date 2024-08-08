@@ -10,7 +10,7 @@ const Todo = () => {
     text: "",
     taskstatus: "Todo",
     tags: [],
-    co3
+
   });
 
   //GETTING TODOS FROM LOCALSTORAGE
